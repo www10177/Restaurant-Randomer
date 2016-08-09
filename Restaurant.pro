@@ -24,3 +24,6 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui \
          addnewdialog.ui \
     rolldialog.ui
+
+DISTFILES += \
+    Memo

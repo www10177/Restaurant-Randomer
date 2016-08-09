@@ -2,7 +2,7 @@
 #include "ui_mainwindow.h"
 #include "addnewdialog.h"
 #include "rolldialog.h"
-//#include <QLineEdit>
+#include <QLineEdit>
 #include <QLabel>
 #include <QLayout>
 #include <QDebug>
@@ -15,15 +15,13 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    layout = new QGridLayout();
+    layout = new QGridLayout(ui->restGroup);
     openFile();
     ui->setupUi(this);
     connect(ui->addBtn,SIGNAL(pressed()),this,SLOT(addDialog()));
     connect(ui->rollBtn,SIGNAL(pressed()),this,SLOT(rollDialog()));
     connect(ui->editBtn,SIGNAL(toggled(bool)),this,SLOT(edit(bool)));
     ui->restGroup->setLayout(layout);
-
-
 
 }
 
@@ -55,12 +53,10 @@ void MainWindow::createNewQLabel(QString text){
 }
 void MainWindow::openFile(){
     saveFile = new QFile(SAVE_NAME,this);
-
     if(saveFile->exists()){
         /*open old data*/
         loadData();
         if( saveFile->open(QIODevice::Append)){
-
         }
     }
 
@@ -70,8 +66,6 @@ void MainWindow::openFile(){
             qDebug()<<"Create New Data File ERROR";
             return;
         }
-
-
     }
 }
 void MainWindow::loadData(){
@@ -84,10 +78,6 @@ void MainWindow::loadData(){
     }
 }
 
-void MainWindow::on_rollBtn_pressed()
-{
-
-}
 
 void MainWindow::rollDialog(){
     RollDialog rollDia(this);
@@ -104,18 +94,26 @@ void MainWindow::edit(bool q){
     if(q){
         ui->editBtn->setText("Done");
         ui->rollBtn->setEnabled(false);
-QLayoutItem* child= ui->restGroup->layout()->takeAt(0);
-       while(child !=NULL){
-           delete child;
-           child= ui->restGroup->layout()->takeAt(0);
-           qDebug()<<"delete";
-       }
-        //   layout = new QGridLayout();
-      //  ui->restGroup->setLayout(layout);
+                qDebug()<<layout->count();
+        QLayoutItem* child = layout->itemAt(0);
+        while (!layout->) {
+            child->widget()->hide();
+            child = layout->itemAt(0);
+        }
+        delete ui->restGroup->layout();
+    }
+    else{
 
+        ui->editBtn->setText("Edit...");
+        ui->rollBtn->setEnabled(true);
 
     }
 
 
 
+}
+
+void MainWindow::on_MainWindow_destroyed()
+{
+    saveFile->close();
 }

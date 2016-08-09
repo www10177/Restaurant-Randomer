@@ -48,8 +48,7 @@ private slots:
    void edit(bool);
    /*delete layout and recreate new layout with QTextEdit*/
 
-
-   void on_rollBtn_pressed();
+   void on_MainWindow_destroyed();
 };
 
 #endif // MAINWINDOW_H
