@@ -15,13 +15,14 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    layout = new QGridLayout();
-    openFile();
     ui->setupUi(this);
+    QGridLayout* layout = new QGridLayout();
+    ui->restGroup->setLayout(layout);
+    openFile();
     connect(ui->addBtn,SIGNAL(pressed()),this,SLOT(addDialog()));
     connect(ui->rollBtn,SIGNAL(pressed()),this,SLOT(rollDialog()));
     connect(ui->editBtn,SIGNAL(toggled(bool)),this,SLOT(edit(bool)));
-    ui->restGroup->setLayout(layout);
+
 
 }
 
@@ -40,7 +41,7 @@ void MainWindow::addDialog(){
 void MainWindow::addNewData(QString text){
     createNewQLabel(text);
 
-    if(!saveFile->open(QIODevice::Append)){
+    if(!saveFile->open(QIODevice::Append| QIODevice::Text)){
         qDebug()<<"Create New Data File ERROR";
         return;
     }
@@ -49,22 +50,18 @@ void MainWindow::addNewData(QString text){
     saveFile->close();
 }
 void MainWindow::createNewQLabel(QString text){
-    //QLineEdit* newData = new QLineEdit(text,this);
     QLabel* newData = new QLabel(text,this);
-    //  newData->setReadOnly(true);
-    newData->setFocusPolicy(Qt::NoFocus);
-    newData->setContextMenuPolicy(Qt::PreventContextMenu);
     data.append(text);
-    layout->addWidget(newData,(data.size()-1)%10,(data.size()-1)/10,Qt::AlignCenter);
+    // qDebug()<< "Data Size : " <<data.size();
+    dynamic_cast<QGridLayout*>(ui->restGroup->layout())->addWidget(newData,(data.size()-1)%10,(data.size()-1)/10,Qt::AlignCenter);
 }
 void MainWindow::openFile(){
     saveFile = new QFile(SAVE_NAME,this);
     if(saveFile->exists()){
-        qDebug() << "loadData;";
         loadData();
     }
     else {
-        if (!saveFile->open(QIODevice::WriteOnly)) {
+        if (!saveFile->open(QIODevice::WriteOnly| QIODevice::Text)) {
             qDebug()<<"Create New File failed";
         }
         else
@@ -72,7 +69,7 @@ void MainWindow::openFile(){
     }
 }
 void MainWindow::loadData(){
-    if(saveFile->open(QIODevice::ReadOnly)){
+    if(saveFile->open(QIODevice::ReadOnly| QIODevice::Text)){
         QTextStream in(saveFile);
         while(!in.atEnd()){
             createNewQLabel(in.readLine());
@@ -95,20 +92,60 @@ QVector<QString> MainWindow::getData(){
 
 void MainWindow::edit(bool q){
     if(q){
+        /*When Edit Button is pressed*/
         ui->editBtn->setText("Done");
         ui->rollBtn->setEnabled(false);
-                qDebug()<<layout->count();
-        QLayoutItem* child = layout->itemAt(0);
-        delete ui->restGroup->layout();
+        qDebug()<<ui->restGroup->layout()->count();
+
+        /*Delete QLabels in restGroup*/
+        qDebug() <<"delete " <<deleteAllWidgets(ui->restGroup->layout()) << " QLabels." ;
+
+        /*Add QLineEdit in restGroup*/
+        for (int i = 0; i < data.size(); ++i) {
+            dynamic_cast<QGridLayout*>(ui->restGroup->layout())->addWidget(new QLineEdit(data[i],ui->restGroup),i%10,i/10,Qt::AlignCenter);
+        }
+
     }
     else{
-
+        /*When Done is pressed*/
         ui->editBtn->setText("Edit...");
         ui->rollBtn->setEnabled(true);
 
+        /*Delete QLineEdits in restGroup and overwrite NEW data to .dat*/
+        saveFile->open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text);
+        QTextStream out(saveFile);
+
+        for (int i = 0; i < data.size(); ++i) {
+            QLayoutItem* child = dynamic_cast<QGridLayout*>(ui->restGroup->layout())->itemAtPosition(i%10,i/10);
+            qDebug() << "EDIT(i) : " << i << dynamic_cast<QLineEdit*>(child->widget())->text();
+            if (dynamic_cast<QLineEdit*>(child->widget())->text() != data[i])
+                data[i] = dynamic_cast<QLineEdit*>(child->widget())->text();
+            out <<data[i]<<endl;
+        }
+           saveFile->close();
+     qDebug() <<"delete " <<deleteAllWidgets(ui->restGroup->layout()) << " QLineEdits." ;
+
+
+
+
+        /*Add QLabel back in restGroup*/
+        foreach (QString i, data) {
+            dynamic_cast<QGridLayout*>(ui->restGroup->layout())->addWidget(new QLabel(i,ui->restGroup),data.indexOf(i)%10,data.indexOf(i)/10,Qt::AlignCenter);
+            qDebug() <<i;
+        }
+        qDebug() << "END";
     }
+}
 
-
-
+int MainWindow::deleteAllWidgets(QLayout *layout){
+    QLayoutItem* child = layout->takeAt(0);
+    int count = 0;
+    while(child!=NULL){
+        child->widget()->hide();
+        delete child;
+        count++;
+        child = layout->takeAt(0);
+    }
+    return count;
 }
 

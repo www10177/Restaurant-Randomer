@@ -26,13 +26,13 @@ private:
     /*Variables*/
     Ui::MainWindow *ui;
     QVector<QString> data;
-    QGridLayout* layout ;
     QFile* saveFile;
 
     /*funtions*/
     void openFile();
     void loadData();
     void createNewQLabel(QString);
+    int deleteAllWidgets(QLayout*); // return how many widgets deleted
 
 signals:
     void callRoll( QVector<QString>& );
@@ -47,8 +47,6 @@ private slots:
    /*add new QLabel to vector and show in restgroup*/
    void edit(bool);
    /*delete layout and recreate new layout with QTextEdit*/
-
-   void on_MainWindow_destroyed();
 };
 
 #endif // MAINWINDOW_H
