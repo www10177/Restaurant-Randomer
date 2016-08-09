@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    layout = new QGridLayout(ui->restGroup);
+    layout = new QGridLayout();
     openFile();
     ui->setupUi(this);
     connect(ui->addBtn,SIGNAL(pressed()),this,SLOT(addDialog()));
@@ -39,8 +39,14 @@ void MainWindow::addDialog(){
 
 void MainWindow::addNewData(QString text){
     createNewQLabel(text);
+
+    if(!saveFile->open(QIODevice::Append)){
+        qDebug()<<"Create New Data File ERROR";
+        return;
+    }
     QTextStream out(saveFile);
     out <<text <<endl;
+    saveFile->close();
 }
 void MainWindow::createNewQLabel(QString text){
     //QLineEdit* newData = new QLineEdit(text,this);
@@ -54,18 +60,15 @@ void MainWindow::createNewQLabel(QString text){
 void MainWindow::openFile(){
     saveFile = new QFile(SAVE_NAME,this);
     if(saveFile->exists()){
-        /*open old data*/
+        qDebug() << "loadData;";
         loadData();
-        if( saveFile->open(QIODevice::Append)){
-        }
     }
-
-    else{
-        /*create new data*/
-        if(!saveFile->open(QIODevice::ReadWrite)){
-            qDebug()<<"Create New Data File ERROR";
-            return;
+    else {
+        if (!saveFile->open(QIODevice::WriteOnly)) {
+            qDebug()<<"Create New File failed";
         }
+        else
+            saveFile->close();
     }
 }
 void MainWindow::loadData(){
@@ -96,10 +99,6 @@ void MainWindow::edit(bool q){
         ui->rollBtn->setEnabled(false);
                 qDebug()<<layout->count();
         QLayoutItem* child = layout->itemAt(0);
-        while (!layout->) {
-            child->widget()->hide();
-            child = layout->itemAt(0);
-        }
         delete ui->restGroup->layout();
     }
     else{
@@ -113,7 +112,3 @@ void MainWindow::edit(bool q){
 
 }
 
-void MainWindow::on_MainWindow_destroyed()
-{
-    saveFile->close();
-}
