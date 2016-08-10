@@ -11,7 +11,7 @@ RollDialog::RollDialog(QWidget *parent) :
     ui(new Ui::RollDialog)
 {
     ui->setupUi(this);
-
+this->setFixedSize(this->width(),this->height());
      this->setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 }
 
@@ -21,6 +21,6 @@ RollDialog::~RollDialog()
 }
 
 void RollDialog::roll(QVector<QString> &data){
-    qsrand(QTime::currentTime().msec());
+    qsrand(QTime::currentTime().msecsSinceStartOfDay());
     ui->result->setText(data[qrand()%data.size()]);
 }

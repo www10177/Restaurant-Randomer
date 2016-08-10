@@ -11,6 +11,7 @@ addNewDialog::addNewDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
+    this->setFixedSize(this->width(),this->height());
     this->setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     connect(ui->nameCol,SIGNAL(textChanged(QString)),this,SLOT(enableOkButton(QString)));
 

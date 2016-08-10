@@ -17,7 +17,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     QGridLayout* layout = new QGridLayout();
-    ui->restGroup->setLayout(layout);
+    ui->restGroup->setLayout(layout);  
+    this->setFixedSize(this->width(),this->height());
     openFile();
     connect(ui->addBtn,SIGNAL(pressed()),this,SLOT(addDialog()));
     connect(ui->rollBtn,SIGNAL(pressed()),this,SLOT(rollDialog()));

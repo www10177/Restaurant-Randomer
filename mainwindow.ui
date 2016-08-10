@@ -6,9 +6,23 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>472</width>
-    <height>550</height>
+    <width>393</width>
+    <height>493</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="font">
+   <font>
+    <family>微軟正黑體</family>
+    <pointsize>10</pointsize>
+    <weight>50</weight>
+    <bold>false</bold>
+   </font>
   </property>
   <property name="windowTitle">
    <string>Restaurant Randomer</string>
@@ -17,8 +31,8 @@
    <widget class="QGroupBox" name="restGroup">
     <property name="geometry">
      <rect>
-      <x>61</x>
-      <y>31</y>
+      <x>30</x>
+      <y>20</y>
       <width>333</width>
       <height>351</height>
      </rect>
@@ -26,14 +40,17 @@
     <property name="title">
      <string>Restaurants</string>
     </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
    </widget>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>430</y>
+      <x>30</x>
+      <y>410</y>
       <width>333</width>
-      <height>58</height>
+      <height>64</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -134,7 +151,7 @@
           <bool>true</bool>
          </property>
          <property name="default">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
         </widget>
        </item>

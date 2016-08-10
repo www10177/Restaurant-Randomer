@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>277</width>
+    <width>283</width>
     <height>82</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
@@ -18,9 +24,15 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>277</width>
-    <height>82</height>
+    <width>999999</width>
+    <height>999999</height>
    </size>
+  </property>
+  <property name="font">
+   <font>
+    <family>微軟正黑體</family>
+    <pointsize>10</pointsize>
+   </font>
   </property>
   <property name="windowTitle">
    <string>Add New Restaurant</string>
@@ -31,7 +43,7 @@
      <x>20</x>
      <y>10</y>
      <width>241</width>
-     <height>55</height>
+     <height>60</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
